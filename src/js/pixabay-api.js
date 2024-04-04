@@ -1,20 +1,25 @@
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
+
+import { renderGalleryElements } from './render-functions';
+
 export const onSearchFormSubmit = event => {
   event.preventDefault();
 
+  const searchInputValue = event.srcElement.elements.search_input.value;
   const options = {
     key: '43212506-95870309335e8ebf3ea9c8656',
-    q: null,
+    q: searchInputValue,
     image_type: 'photo',
     orientation: 'horizontal',
     safesearch: true,
+    per_page: 9,
   };
 
-  let { key, q, image_type, orientation, safesearch } = options;
-  q = event.srcElement.elements.search_input.value;
+  const searchParams = new URLSearchParams(options).toString();
+  const url = `https://pixabay.com/api/?${searchParams}`;
 
-  fetch(
-    `https://pixabay.com/api/?key=${key}&q=${q}&mage_type=${image_type}&orientation=${orientation}&safesearch=${safesearch}`
-  )
+  fetch(url)
     .then(response => {
       if (!response.ok) {
         throw new Error(response.status);
@@ -22,8 +27,17 @@ export const onSearchFormSubmit = event => {
       return response.json();
     })
     .then(data => {
-      console.log(data);
-      return data;
+      if (data.hits.length === 0) {
+        iziToast.show({
+          message:
+            'Sorry, there are no images matching your search query. Please try again!',
+          messageColor: '#fff',
+          backgroundColor: '#ff3333',
+          position: 'topRight',
+        });
+        return;
+      }
+      renderGalleryElements(data);
     })
     .catch(error => {
       return error;
