@@ -15,12 +15,20 @@ export const elements = {
   loader: document.querySelector('.loader'),
 };
 
-const messages = {
+export const messages = {
   iziToast: {
-    error() {
+    noMatches() {
       iziToast.show({
         message:
           'Sorry, there are no images matching your search query. Please try again!',
+        messageColor: '#fff',
+        backgroundColor: '#ff3333',
+        position: 'topRight',
+      });
+    },
+    somethingWentWrong() {
+      iziToast.show({
+        message: 'Sorry, something went wrong. Please try again later!',
         messageColor: '#fff',
         backgroundColor: '#ff3333',
         position: 'topRight',
@@ -54,7 +62,7 @@ const onSearchFormSubmit = event => {
   const searchData = getData(url, options);
   searchData.then(data => {
     if (data.hits.length === 0) {
-      messages.iziToast.error();
+      messages.iziToast.noMatches();
       return;
     }
     renderElements(data.hits, elements.gallery);

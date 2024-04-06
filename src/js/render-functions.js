@@ -1,8 +1,4 @@
-import { elements } from '../main';
-
 export const renderElements = (searchData, rootElement) => {
-  rootElement.innerHTML = '';
-
   const markup = searchData
     .map(img => {
       return `
