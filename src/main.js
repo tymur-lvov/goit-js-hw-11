@@ -7,7 +7,7 @@ import 'izitoast/dist/css/iziToast.min.css';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-const elements = {
+export const elements = {
   searchForm: document.querySelector('.search-form'),
   searchInput: document.querySelector('.search-input'),
   searchButton: document.querySelector('.search-button'),

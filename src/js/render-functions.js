@@ -1,3 +1,5 @@
+import { elements } from '../main';
+
 export const renderElements = (searchData, rootElement) => {
   rootElement.innerHTML = '';
 
