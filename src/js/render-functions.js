@@ -1,5 +1,5 @@
-export const renderElements = (searchData, rootElement) => {
-  const markup = searchData
+export const renderElements = searchData => {
+  return searchData
     .map(img => {
       return `
       <li class="gallery-item"><a href="${img.largeImageURL}" class="gallery-link"><img src="${img.webformatURL}"
@@ -15,6 +15,4 @@ export const renderElements = (searchData, rootElement) => {
       `;
     })
     .join('');
-
-  rootElement.insertAdjacentHTML('beforeend', markup);
 };

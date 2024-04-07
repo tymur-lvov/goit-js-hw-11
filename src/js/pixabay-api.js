@@ -1,23 +1,21 @@
-import { elements } from '../main';
-import { messages } from '../main';
+export const getData = event => {
+  const searchInputValue = event.srcElement.elements.search_input.value;
+  const options = {
+    key: '43212506-95870309335e8ebf3ea9c8656',
+    q: searchInputValue,
+    image_type: 'photo',
+    orientation: 'horizontal',
+    safesearch: true,
+    per_page: 9,
+  };
 
-export const getData = (url, options) => {
-  elements.gallery.innerHTML = '';
+  const searchParams = new URLSearchParams(options).toString();
+  const url = `https://pixabay.com/api/?${searchParams}`;
 
-  elements.loader.classList.add('is-open');
-
-  return fetch(url, options)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(response.status);
-      }
-
-      return response.json();
-    })
-    .catch(() => {
-      messages.iziToast.somethingWentWrong();
-    })
-    .finally(() => {
-      elements.loader.classList.remove('is-open');
-    });
+  return fetch(url).then(response => {
+    if (!response.ok) {
+      throw new Error(response.status);
+    }
+    return response.json();
+  });
 };

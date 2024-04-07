@@ -7,67 +7,51 @@ import 'izitoast/dist/css/iziToast.min.css';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-export const elements = {
+const elements = {
   searchForm: document.querySelector('.search-form'),
-  searchInput: document.querySelector('.search-input'),
-  searchButton: document.querySelector('.search-button'),
   gallery: document.querySelector('.gallery'),
   loader: document.querySelector('.loader'),
 };
 
-export const messages = {
-  iziToast: {
-    noMatches() {
-      iziToast.show({
-        message:
-          'Sorry, there are no images matching your search query. Please try again!',
-        messageColor: '#fff',
-        backgroundColor: '#ff3333',
-        position: 'topRight',
-      });
-    },
-    somethingWentWrong() {
-      iziToast.show({
-        message: 'Sorry, something went wrong. Please try again later!',
-        messageColor: '#fff',
-        backgroundColor: '#ff3333',
-        position: 'topRight',
-      });
-    },
+const messages = {
+  noMatches() {
+    iziToast.show({
+      message:
+        'Sorry, there are no images matching your search query. Please try again!',
+      messageColor: '#fff',
+      backgroundColor: '#ff3333',
+      position: 'topRight',
+    });
   },
 };
 
 const options = {
-  simpleLightBox: { captionsData: 'alt', captionDelay: 250 },
+  captionsData: 'alt',
+  captionDelay: 250,
 };
-
-const imageModal = new SimpleLightbox('.gallery a', options.simpleLightBox);
+const imageModal = new SimpleLightbox('.gallery a', options);
 
 const onSearchFormSubmit = event => {
   event.preventDefault();
 
-  const searchInputValue = event.srcElement.elements.search_input.value;
-  const options = {
-    key: '43212506-95870309335e8ebf3ea9c8656',
-    q: searchInputValue,
-    image_type: 'photo',
-    orientation: 'horizontal',
-    safesearch: true,
-    per_page: 9,
-  };
+  elements.gallery.innerHTML = '';
+  elements.loader.classList.add('is-open');
 
-  const searchParams = new URLSearchParams(options).toString();
-  const url = `https://pixabay.com/api/?${searchParams}`;
-
-  const searchData = getData(url, options);
-  searchData.then(data => {
-    if (data.hits.length === 0) {
-      messages.iziToast.noMatches();
-      return;
-    }
-    renderElements(data.hits, elements.gallery);
-    imageModal.refresh();
-  });
+  getData(event)
+    .then(data => {
+      if (data.hits.length === 0) {
+        messages.noMatches();
+        return;
+      }
+      elements.gallery.insertAdjacentHTML(
+        'beforeend',
+        renderElements(data.hits)
+      );
+      imageModal.refresh();
+    })
+    .finally(() => {
+      elements.loader.classList.remove('is-open');
+    });
 };
 
 elements.searchForm.addEventListener('submit', onSearchFormSubmit);
